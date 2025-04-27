@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools"]
+
+[project]
+name = "django_simple_tasks"
+version = "0.1.0"
+authors = [
+  { name="Łukasz Klim", email="lukasz.klim92@gmail.com" },
+]
+description = "Wykop SDK for APIv3 and above."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Framework :: Django :: 4.2",
+]
+dependencies = ["Django>=4.2"]
+
+[project.urls]
+Homepage = "https://github.com/lukas346/wykop_sdk_reloaded"
+Issues = "https://github.com/lukas346/wykop_sdk_reloaded/issues"

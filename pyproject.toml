@@ -2,14 +2,14 @@
 requires = ["setuptools"]
 
 [project]
-name = "django_simple_tasks"
-version = "0.1.0"
+name = "django_firefly_tasks"
+version = "0.0.5"
 authors = [
   { name="Łukasz Klim", email="lukasz.klim92@gmail.com" },
 ]
-description = "Wykop SDK for APIv3 and above."
+description = "Simple and easy to use background tasks in Django without dependencies!"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.14"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -18,9 +18,28 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Operating System :: OS Independent",
     "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
 ]
 dependencies = ["Django>=4.2"]
 
 [project.urls]
-Homepage = "https://github.com/lukas346/wykop_sdk_reloaded"
-Issues = "https://github.com/lukas346/wykop_sdk_reloaded/issues"
+Homepage = "https://github.com/lukas346/django_firefly_tasks"
+Documentation = "https://lukas346.github.io/django_firefly_tasks/"
+Issues = "https://github.com/lukas346/django_firefly_tasks/issues"
+
+[tool.isort]
+profile = "black"
+group_by_package = true
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+extend-exclude = '''
+/(
+  # The following are specific to Black, you probably don't want those.
+  | alembic
+)/
+'''
+
+[tool.flake8]
+max-line-length = 120

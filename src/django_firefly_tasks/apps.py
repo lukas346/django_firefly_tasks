@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class TestsConfig(AppConfig):
+class DjangFireflyTasksConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "tests"
+    name = "django_firefly_tasks"

@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; Django FireFly Tasks  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Task Guide" href="tasks.html" />
+    <link rel="prev" title="Django FireFly Tasks" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Django FireFly Tasks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Pages:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instalation">Instalation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#frequently-asked-questions">Frequently Asked Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#consumer-is-too-slow-what-can-i-do">Consumer is too slow, what can I do?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-run-multiple-consumers-for-the-same-queue">Can I run multiple consumers for the same queue?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#support">Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contact">Contact</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tasks.html">Task Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Django Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conf.html">Global Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exception Classes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Django FireFly Tasks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p align="center">
+  <img src="https://i.imgur.com/kshLe4w.png">
+</p><p><a class="reference external" href="https://github.com/lukas346/django_firefly_tasks/actions/workflows/testing.yml"><img alt="Package Testing" src="https://github.com/lukas346/django_firefly_tasks/actions/workflows/testing.yml/badge.svg" /></a>
+<a class="reference external" href="https://badge.fury.io/py/django-firefly-tasks"><img alt="PyPI version" src="https://badge.fury.io/py/django-firefly-tasks.svg" /></a>
+<a class="reference external" href="https://pepy.tech/projects/django-firefly-tasks"><img alt="PyPI Downloads" src="https://static.pepy.tech/badge/django-firefly-tasks" /></a></p>
+<section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
+<p>Simple and easy to use background tasks in Django without dependencies!</p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>⚡ <strong>Easy background task creation</strong></p></li>
+<li><p>🛤️ <strong>Multiple queue support</strong></p></li>
+<li><p>🔄 <strong>Automatic task retrying</strong></p></li>
+<li><p>🛠️ <strong>Well integrated with your chosen database</strong></p></li>
+<li><p>🚫 <strong>No additional dependencies</strong></p></li>
+<li><p>🔀 <strong>Supports both sync and async functions</strong></p></li>
+</ul>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://lukas346.github.io/django_firefly_tasks/">🙂 Click HERE </a></p>
+</section>
+<section id="instalation">
+<h2>Instalation<a class="headerlink" href="#instalation" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>django_firefly_tasks
+</pre></div>
+</div>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<p>settings.py</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.messages&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
+    <span class="c1">###############</span>
+    <span class="s1">&#39;django_firefly_tasks&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">LOGGING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;disable_existing_loggers&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+
+    <span class="s1">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;console&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="s1">&#39;INFO&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;logging.StreamHandler&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+
+    <span class="s1">&#39;loggers&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;django_firefly_tasks&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;console&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="s1">&#39;INFO&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;propagate&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<p><strong>views.py</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.http.response</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonResponse</span><span class="p">,</span> <span class="n">Http404</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">django_firefly_tasks.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django_firefly_tasks.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django_firefly_tasks.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">task_as_dict</span>
+
+
+<span class="nd">@task</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">retry_delay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># param &quot;queue&quot; defines the queue in which the task will be placed</span>
+<span class="c1"># param &quot;max_retries&quot; defines max retries on fail</span>
+<span class="c1"># param &quot;retry_delay&quot; defines delay in seconds  between restarts</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">task_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Example response</span>
+<span class="sd">    ---</span>
+<span class="sd">    {</span>
+<span class="sd">        &quot;id&quot;: 1,</span>
+<span class="sd">        &quot;func_name&quot;: &quot;app.views.add&quot;,</span>
+<span class="sd">        &quot;status&quot;: &quot;created&quot;,</span>
+<span class="sd">        &quot;not_before&quot;: null,</span>
+<span class="sd">        &quot;created&quot;: &quot;2025-04-27T17:28:36.109Z&quot;,</span>
+<span class="sd">        &quot;retry_attempts&quot;: 0,</span>
+<span class="sd">        &quot;retry_delay&quot;: &quot;0s&quot;,</span>
+<span class="sd">        &quot;max_retries&quot;: 0</span>
+<span class="sd">    }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># pass function args to schedule method</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">add</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">task_as_dict</span><span class="p">(</span><span class="n">task</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">task_detail_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">task_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Example response</span>
+<span class="sd">    ---</span>
+<span class="sd">        4</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">TaskModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">task_id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">TaskModel</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Http404</span><span class="p">(</span><span class="s2">&quot;Task does not exist&quot;</span><span class="p">)</span>
+    <span class="c1"># task.returned stores function returned data </span>
+    <span class="k">return</span> <span class="n">JsonResponse</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">returned</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>urls.py</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">task_view</span><span class="p">,</span> <span class="n">task_detail_view</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;task/&#39;</span><span class="p">,</span> <span class="n">task_view</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;task_view&#39;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;task/&lt;int:task_id&gt;&#39;</span><span class="p">,</span> <span class="n">task_detail_view</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;task_detail_view&#39;</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Finally, run consumer. Default queue is called “default”. <strong>Consumer doesn’t have  auto-reload, so when tasks changed it requires manual restart.</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./manage.py<span class="w"> </span>consume_tasks
+</pre></div>
+</div>
+</section>
+<section id="frequently-asked-questions">
+<h2>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h2>
+<section id="consumer-is-too-slow-what-can-i-do">
+<h3>Consumer is too slow, what can I do?<a class="headerlink" href="#consumer-is-too-slow-what-can-i-do" title="Link to this heading"></a></h3>
+<p>Set in your <code class="docutils literal notranslate"><span class="pre">settings.py</span></code> <code class="docutils literal notranslate"><span class="pre">CONSUMER_NAP_TIME</span></code> lower value (default <code class="docutils literal notranslate"><span class="pre">0.001</span></code> aka 1000 tasks per second). You can also try to scale it horizontally by defining multiple queues and running multiple consumers for each one.</p>
+</section>
+<section id="can-i-run-multiple-consumers-for-the-same-queue">
+<h3>Can I run multiple consumers for the same queue?<a class="headerlink" href="#can-i-run-multiple-consumers-for-the-same-queue" title="Link to this heading"></a></h3>
+<p>Yes, but it is not recommended. Consumers could lock each other.</p>
+</section>
+</section>
+<section id="support">
+<h2>Support<a class="headerlink" href="#support" title="Link to this heading"></a></h2>
+<p>If this project was useful to you, <a class="reference external" href="https://www.paypal.com/donate/?hosted_button_id=Q7LLNBFFFY57Q">feel free to buy me a coffee ☕</a>. It doesn’t have to be from Starbucks — even a budget one is just fine ;) Every donation, no matter how small, is a sign that what I’m doing is valuable to you and worth maintaining.</p>
+<p><a class="reference external" href="https://www.paypal.com/donate/?hosted_button_id=Q7LLNBFFFY57Q"><img alt="paypal" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" /></a></p>
+</section>
+<section id="contact">
+<h2>Contact<a class="headerlink" href="#contact" title="Link to this heading"></a></h2>
+<p>If you’re missing something, feel free to add your own Issue or PR, which are, of course, welcome.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Django FireFly Tasks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tasks.html" class="btn btn-neutral float-right" title="Task Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Klim.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

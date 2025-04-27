@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Guide &mdash; Django FireFly Tasks  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Django Commands" href="commands.html" />
+    <link rel="prev" title="Introduction" href="README.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Django FireFly Tasks
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Pages:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Task Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#django-firefly-tasks-decorators-task"><code class="docutils literal notranslate"><span class="pre">django_firefly_tasks.decorators.task</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#django-firefly-tasks-decorators-atask"><code class="docutils literal notranslate"><span class="pre">django_firefly_tasks.decorators.atask</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">⚙️ Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to Use</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#define-the-function">1️⃣ Define the function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#decorate-it">2️⃣ Decorate it</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schedule-the-task-in-views-models-serializers-forms-etc">3️⃣ Schedule the task (in views, models, serializers, forms, etc.)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#retrieve-returned-data-after-processing">4️⃣ Retrieve returned data after processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#consumer">Consumer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#task-restarting">Task Restarting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#task-entity-structure">Task Entity Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Django Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conf.html">Global Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exception Classes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Django FireFly Tasks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Task Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tasks.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="task-guide">
+<h1>Task Guide<a class="headerlink" href="#task-guide" title="Link to this heading"></a></h1>
+<p>Task metadata is an entity stored in your <strong>database of choice</strong> and consumed by a worker. Parameters and returned data are pickled and stored as a Base64 string for compatibility.  ⚠️ <strong>Keep the data as small as possible</strong> — prefer using <em>primitive types</em> instead of complex objects.</p>
+<p>All operations in task/function are wrapped in a <code class="docutils literal notranslate"><span class="pre">transaction.atomic</span></code> block.</p>
+<p>If the queue is always full, deferred tasks may never get executed again.</p>
+<section id="django-firefly-tasks-decorators-task">
+<h2><code class="docutils literal notranslate"><span class="pre">django_firefly_tasks.decorators.task</span></code><a class="headerlink" href="#django-firefly-tasks-decorators-task" title="Link to this heading"></a></h2>
+<p>Supports <strong>synchronous</strong> functions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@task</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="django-firefly-tasks-decorators-atask">
+<h2><code class="docutils literal notranslate"><span class="pre">django_firefly_tasks.decorators.atask</span></code><a class="headerlink" href="#django-firefly-tasks-decorators-atask" title="Link to this heading"></a></h2>
+<p>Supports <strong>asynchronous</strong> functions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@atask</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="parameters">
+<h2>⚙️ Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>queue</strong> (<em>str</em>): the queue in which the task will be placed (default = <code class="docutils literal notranslate"><span class="pre">&quot;default&quot;</span></code>)</p></li>
+<li><p><strong>max_retries</strong> (<em>int</em>): maximum number of retries on failure (default = <code class="docutils literal notranslate"><span class="pre">0</span></code>)</p></li>
+<li><p><strong>retry_delay</strong> (<em>int</em>): delay in seconds between retries (default = <code class="docutils literal notranslate"><span class="pre">120</span></code>)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
+<section id="define-the-function">
+<h3>1️⃣ Define the function<a class="headerlink" href="#define-the-function" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span>
+</pre></div>
+</div>
+</section>
+<section id="decorate-it">
+<h3>2️⃣ Decorate it<a class="headerlink" href="#decorate-it" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@task</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">max_retries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">retry_delay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span>
+</pre></div>
+</div>
+</section>
+<section id="schedule-the-task-in-views-models-serializers-forms-etc">
+<h3>3️⃣ Schedule the task (in views, models, serializers, forms, etc.)<a class="headerlink" href="#schedule-the-task-in-views-models-serializers-forms-etc" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">task</span> <span class="o">=</span> <span class="n">add</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">TaskModel</span></code> instance is returned. It stores metadata about the scheduled task.</p>
+</section>
+<section id="retrieve-returned-data-after-processing">
+<h3>4️⃣ Retrieve returned data after processing<a class="headerlink" href="#retrieve-returned-data-after-processing" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">task</span> <span class="o">=</span> <span class="n">TaskModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">task</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="n">returned_data</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">returned</span> <span class="c1"># 4</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="consumer">
+<h2>Consumer<a class="headerlink" href="#consumer" title="Link to this heading"></a></h2>
+<p>A consumer is required to process tasks. Use the Django management command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./manage.py<span class="w"> </span>consume_tasks
+</pre></div>
+</div>
+<p>To define a specific queue:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./manage.py<span class="w"> </span>consume_tasks<span class="w"> </span>--queue<span class="w"> </span>default
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="task-restarting">
+<h2>Task Restarting<a class="headerlink" href="#task-restarting" title="Link to this heading"></a></h2>
+<p>You can configure task restarting with the following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">max_retries</span></code>: how many times the task should retry on failure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_delay</span></code>: delay (in seconds) between retries</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@task</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">retry_delay</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will retry the task up to 20 times, waiting 100 seconds between each attempt.</p>
+</section>
+<hr class="docutils" />
+<section id="task-entity-structure">
+<h2>Task Entity Structure<a class="headerlink" href="#task-entity-structure" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>): task id</p></li>
+<li><p><strong>func_name</strong> (<em>str</em>): function name with the path in dot notation</p></li>
+<li><p><strong>queue</strong> (<em>str</em>): target queue</p></li>
+<li><p><strong>status</strong> (<em>str</em>): status of the task (<code class="docutils literal notranslate"><span class="pre">created</span></code>, <code class="docutils literal notranslate"><span class="pre">completed</span></code>, <code class="docutils literal notranslate"><span class="pre">failed</span></code>)</p></li>
+<li><p><strong>created</strong> (<em>datetime</em>): time of creation</p></li>
+<li><p><strong>completed</strong> (<em>datetime</em>): time of successful completion</p></li>
+<li><p><strong>failed</strong> (<em>datetime</em>): time of failure</p></li>
+<li><p><strong>not_before</strong> (<em>datetime</em>): task will not run before this datetime</p></li>
+<li><p><strong>params</strong> (<em>any</em>): parameters passed to the function</p></li>
+<li><p><strong>returned</strong> (<em>any</em>): value returned by the function</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="README.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="commands.html" class="btn btn-neutral float-right" title="Django Commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Klim.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

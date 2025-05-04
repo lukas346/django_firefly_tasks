@@ -1,10 +1,10 @@
 name: Package Testing
 
 on:
-    workflow_run:
-        workflows: ['Checking code style']
-        types: [completed]
-        branches: [ "main" ]
+  workflow_run:
+    workflows: ["Checking code style"]
+    types:
+      - completed
 
 jobs:
   build:

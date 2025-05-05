@@ -53,6 +53,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#frequently-asked-questions">Frequently Asked Questions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#consumer-is-too-slow-what-can-i-do">Consumer is too slow, what can I do?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#can-i-run-multiple-consumers-for-the-same-queue">Can I run multiple consumers for the same queue?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#i-changed-the-location-or-name-of-a-decorated-function-and-now-the-consumer-can-t-process-old-tasks-what-should-i-do">I changed the location or name of a decorated function, and now the consumer can’t process old tasks. What should I do?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-specify-the-date-and-time-of-task-execution">Can I specify the date and time of task execution?</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#support">Support</a></li>
@@ -232,6 +234,15 @@
 <section id="can-i-run-multiple-consumers-for-the-same-queue">
 <h3>Can I run multiple consumers for the same queue?<a class="headerlink" href="#can-i-run-multiple-consumers-for-the-same-queue" title="Link to this heading"></a></h3>
 <p>Yes, but it is not recommended. Consumers could lock each other.</p>
+</section>
+<section id="i-changed-the-location-or-name-of-a-decorated-function-and-now-the-consumer-can-t-process-old-tasks-what-should-i-do">
+<h3>I changed the location or name of a decorated function, and now the consumer can’t process old tasks. What should I do?<a class="headerlink" href="#i-changed-the-location-or-name-of-a-decorated-function-and-now-the-consumer-can-t-process-old-tasks-what-should-i-do" title="Link to this heading"></a></h3>
+<p>When task metadata is created, it stores the function’s location in dot notation (e.g., app.views.foo). If you move or rename the function, this path changes, and the consumer can no longer locate it.</p>
+<p>The best solution for now is to manually update the <code class="docutils literal notranslate"><span class="pre">TaskModel.func_name</span></code> field in the database to reflect the new function path - for example, change it from <code class="docutils literal notranslate"><span class="pre">app.views.foo</span></code> to <code class="docutils literal notranslate"><span class="pre">app.tasks.foo</span></code>.</p>
+</section>
+<section id="can-i-specify-the-date-and-time-of-task-execution">
+<h3>Can I specify the date and time of task execution?<a class="headerlink" href="#can-i-specify-the-date-and-time-of-task-execution" title="Link to this heading"></a></h3>
+<p>This feature is coming soon.</p>
 </section>
 </section>
 <section id="support">

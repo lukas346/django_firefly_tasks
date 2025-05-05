@@ -137,6 +137,12 @@ Finally, run consumer. Default queue is called "default". **Consumer doesn't hav
 Set in your `settings.py` `CONSUMER_NAP_TIME` lower value (default `0.001` aka 1000 tasks per second). You can also try to scale it horizontally by defining multiple queues and running multiple consumers for each one.
 ### Can I run multiple consumers for the same queue?
 Yes, but it is not recommended. Consumers could lock each other.
+### I changed the location or name of a decorated function, and now the consumer can't process old tasks. What should I do?
+When task metadata is created, it stores the function's location in dot notation (e.g., app.views.foo). If you move or rename the function, this path changes, and the consumer can no longer locate it.
+
+The best solution for now is to manually update the `TaskModel.func_name` field in the database to reflect the new function path - for example, change it from `app.views.foo` to `app.tasks.foo`.
+### Can I specify the date and time of task execution?
+This feature is coming soon.
 
 ## Support
 

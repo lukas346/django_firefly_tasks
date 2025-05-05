@@ -14,6 +14,8 @@ Supports **synchronous** functions.
 @task()
 def foo():
     pass
+
+# foo.schedule()
 ```
 
 ---
@@ -25,6 +27,8 @@ Supports **asynchronous** functions.
 @atask()
 async def foo():
     pass
+
+# await foo.schedule()
 ```
 
 ---

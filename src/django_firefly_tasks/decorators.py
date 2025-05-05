@@ -53,14 +53,14 @@ def atask(queue: str = DEFAULT_QUEUE, max_retries: int = MAX_RETRIES, retry_dela
     """
 
     def decorator(func):
-        def schedule(*args, **kwargs):
+        async def schedule(*args, **kwargs):
             if not is_async(func):
                 raise SyncFuncNotSupportedException
 
             func_name = get_func_path(func)
             serialized_params = serialize_object({"args": args, "kwargs": kwargs})
 
-            return TaskModel.objects.create(
+            return await TaskModel.objects.acreate(
                 func_name=func_name,
                 raw_params=serialized_params,
                 queue=queue,

@@ -70,3 +70,14 @@ def create_foo_failling(name: str):
 async def async_create_foo_failling(name: str):
     await FooModel.objects.acreate(name=name)
     raise Exception
+
+
+@task(queue=settings.DEFAULT_QUEUE, max_retries=settings.MAX_RETRIES, retry_delay=settings.RETRY_DELAY)
+def schedule_task():
+    add.schedule(1, 3)
+
+
+@atask(queue=settings.DEFAULT_QUEUE, max_retries=settings.MAX_RETRIES, retry_delay=settings.RETRY_DELAY)
+async def async_schedule_task():
+    await asyncio.sleep(0.0001)
+    await async_add.schedule(1, 3)

@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.conf import settings
 from django.db import transaction
 from django.test import TestCase
@@ -145,6 +147,43 @@ class TasksTest(TestCase):
         self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
         self.assertEqual(task.max_retries, settings.MAX_RETRIES)
 
+    def test_failing_restarting_finally_succeed_task(self):
+        task = restarting_failling.schedule()
+
+        self.assertEqual(task.func_name, "tests.tasks.restarting_failling")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        task.is_postponed = lambda: False
+
+        for _ in range(settings.MAX_RETRIES - 1):
+            with transaction.atomic():
+                task_processor(task)
+
+        task = TaskModel.objects.get(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.restarting_failling")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, settings.MAX_RETRIES - 1)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        task.is_postponed = lambda: False
+
+        with patch("tests.tasks.failing_func"):
+            with transaction.atomic():
+                task_processor(task)
+
+        task = TaskModel.objects.get(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.restarting_failling")
+        self.assertEqual(task.status, Status.COMPLETED)
+        self.assertEqual(task.retry_attempts, settings.MAX_RETRIES - 1)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
 
 class AsyncTasksTest(TestCase):
     def test_atask_simple(self):
@@ -241,6 +280,43 @@ class AsyncTasksTest(TestCase):
         self.assertEqual(task.func_name, "tests.tasks.async_restarting_failling")
         self.assertEqual(task.status, Status.FAILED)
         self.assertEqual(task.retry_attempts, settings.MAX_RETRIES)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+    def test_failing_restarting_finally_succeed_task(self):
+        task = async_restarting_failling.schedule()
+
+        self.assertEqual(task.func_name, "tests.tasks.async_restarting_failling")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        task.is_postponed = lambda: False
+
+        for _ in range(settings.MAX_RETRIES - 1):
+            with transaction.atomic():
+                task_processor(task)
+
+        task = TaskModel.objects.get(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_restarting_failling")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, settings.MAX_RETRIES - 1)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        task.is_postponed = lambda: False
+
+        with patch("tests.tasks.failing_func"):
+            with transaction.atomic():
+                task_processor(task)
+
+        task = TaskModel.objects.get(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_restarting_failling")
+        self.assertEqual(task.status, Status.COMPLETED)
+        self.assertEqual(task.retry_attempts, settings.MAX_RETRIES - 1)
         self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
         self.assertEqual(task.max_retries, settings.MAX_RETRIES)
 

@@ -33,7 +33,7 @@ group_by_package = true
 
 [tool.black]
 line-length = 120
-target-version = ['py311']
+target-version = ['py313']
 extend-exclude = '''
 /(
   # The following are specific to Black, you probably don't want those.

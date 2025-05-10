@@ -145,8 +145,8 @@ If necessary, you can use `sync_to_async` or `async_to_sync` to bridge between s
 ```python
 from asgiref.sync import async_to_sync
 
-@atask()
-async def async_schedule_task():
+@task()
+def schedule_task():
     async_to_sync(async_add.schedule)(1, 3)
 ```
 

@@ -106,6 +106,41 @@ class TasksTest(TestCase):
         self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
         self.assertEqual(task.max_retries, settings.MAX_RETRIES)
 
+    def test_task_eta_failed_then_succeed(self):
+        eta = datetime(2025, 3, 30, 18, 30, tzinfo=ZoneInfo("UTC"))
+        task = restarting_failling.schedule(eta=eta)
+
+        self.assertEqual(task.func_name, "tests.tasks.restarting_failling")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.not_before, eta)
+
+        with patch("django_firefly_tasks.models.timezone.now", return_value=eta + timedelta(hours=3)):
+            with transaction.atomic():
+                task_processor(task)
+
+        task = TaskModel.objects.get(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.restarting_failling")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 1)
+        self.assertEqual(task.not_before, eta + timedelta(hours=3) + timedelta(seconds=settings.RETRY_DELAY))
+
+        with patch(
+            "django_firefly_tasks.models.timezone.now",
+            return_value=eta + timedelta(hours=3) + timedelta(seconds=settings.RETRY_DELAY),
+        ):
+            with patch("tests.tasks.failing_func"):
+                with transaction.atomic():
+                    task_processor(task)
+
+        task = TaskModel.objects.get(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.restarting_failling")
+        self.assertEqual(task.status, Status.COMPLETED)
+        self.assertEqual(task.retry_attempts, 1)
+        self.assertEqual(task.not_before, eta + timedelta(hours=3) + timedelta(seconds=settings.RETRY_DELAY))
+
     def test_task_sync_not_supported(self):
         with self.assertRaises(AsyncFuncNotSupportedException):
             broken_sync_add.schedule(1, 3)
@@ -326,6 +361,39 @@ class AsyncTasksTest(TestCase):
         self.assertEqual(task.retry_attempts, 0)
         self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
         self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+    async def test_task_eta_failed_then_succeed(self):
+        eta = datetime(2025, 3, 30, 18, 30, tzinfo=ZoneInfo("UTC"))
+        task = await async_restarting_failling.schedule(eta=eta)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_restarting_failling")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.not_before, eta)
+
+        with patch("django_firefly_tasks.models.timezone.now", return_value=eta + timedelta(hours=3)):
+            await sync_to_async(process)(task)
+
+        task = await TaskModel.objects.aget(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_restarting_failling")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 1)
+        self.assertEqual(task.not_before, eta + timedelta(hours=3) + timedelta(seconds=settings.RETRY_DELAY))
+
+        with patch(
+            "django_firefly_tasks.models.timezone.now",
+            return_value=eta + timedelta(hours=3) + timedelta(seconds=settings.RETRY_DELAY),
+        ):
+            with patch("tests.tasks.failing_func"):
+                await sync_to_async(process)(task)
+
+        task = await TaskModel.objects.aget(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_restarting_failling")
+        self.assertEqual(task.status, Status.COMPLETED)
+        self.assertEqual(task.retry_attempts, 1)
+        self.assertEqual(task.not_before, eta + timedelta(hours=3) + timedelta(seconds=settings.RETRY_DELAY))
 
     async def test_task_async_not_supported(self):
         with self.assertRaises(SyncFuncNotSupportedException):

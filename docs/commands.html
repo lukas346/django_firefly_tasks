@@ -88,7 +88,7 @@
 <section id="consume-tasks">
 <h2>Consume tasks<a class="headerlink" href="#consume-tasks" title="Link to this heading"></a></h2>
 <p>Consumes scheduled tasks. Default queue is called “default”. <strong>Consumer doesn’t have auto-reload, so when tasks changed it requires manual restart.</strong></p>
-<p>Consuming order: <code class="docutils literal notranslate"><span class="pre">created,</span> <span class="pre">not</span> <span class="pre">retried</span></code>, <code class="docutils literal notranslate"><span class="pre">closest</span> <span class="pre">retries</span></code>, <code class="docutils literal notranslate"><span class="pre">the</span> <span class="pre">most</span> <span class="pre">distant</span> <span class="pre">in</span> <span class="pre">time</span> <span class="pre">retries</span></code></p>
+<p>Consuming order: <code class="docutils literal notranslate"><span class="pre">created,</span> <span class="pre">not</span> <span class="pre">retried</span></code>, <code class="docutils literal notranslate"><span class="pre">closest</span> <span class="pre">retries</span></code>, <code class="docutils literal notranslate"><span class="pre">eta</span></code>, <code class="docutils literal notranslate"><span class="pre">the</span> <span class="pre">most</span> <span class="pre">distant</span> <span class="pre">in</span> <span class="pre">time</span> <span class="pre">retries</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>manage.py<span class="w"> </span>consume_tasks<span class="w"> </span><span class="o">[</span>--queue<span class="w"> </span>QUEUE<span class="o">]</span>
 </pre></div>
 </div>

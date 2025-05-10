@@ -242,7 +242,10 @@
 </section>
 <section id="can-i-specify-the-date-and-time-of-task-execution">
 <h3>Can I specify the date and time of task execution?<a class="headerlink" href="#can-i-specify-the-date-and-time-of-task-execution" title="Link to this heading"></a></h3>
-<p>This feature is coming soon.</p>
+<p>Yes, please use <code class="docutils literal notranslate"><span class="pre">eta</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">schedule</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">add</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">ZoneInfo</span><span class="p">(</span><span class="s2">&quot;UTC&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="support">

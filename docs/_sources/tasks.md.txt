@@ -106,6 +106,36 @@ You can configure task restarting with the following parameters:
 
 This will retry the task up to 20 times, waiting 100 seconds between each attempt.
 
+
+---
+
+## Running a Task Inside Another Task
+You can invoke a task from within another task.
+
+```python
+@task()
+def schedule_task():
+    add.schedule(1, 3)
+```
+
+When doing so, make sure to call synchronous tasks from within other synchronous tasks, and asynchronous tasks from within asynchronous tasks:
+
+```python
+@atask()
+async def async_schedule_task():
+    await async_add.schedule(1, 3)
+```
+
+If necessary, you can use `sync_to_async` or `async_to_sync` to bridge between sync and async contexts:
+
+```python
+from asgiref.sync import async_to_sync
+
+@atask()
+async def async_schedule_task():
+    async_to_sync(async_add.schedule)(1, 3)
+```
+
 ---
 
 ## Task Entity Structure

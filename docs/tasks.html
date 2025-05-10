@@ -58,6 +58,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#consumer">Consumer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#task-restarting">Task Restarting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-a-task-inside-another-task">Running a Task Inside Another Task</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#task-entity-structure">Task Entity Structure</a></li>
 </ul>
 </li>
@@ -186,6 +187,30 @@
 </pre></div>
 </div>
 <p>This will retry the task up to 20 times, waiting 100 seconds between each attempt.</p>
+</section>
+<hr class="docutils" />
+<section id="running-a-task-inside-another-task">
+<h2>Running a Task Inside Another Task<a class="headerlink" href="#running-a-task-inside-another-task" title="Link to this heading"></a></h2>
+<p>You can invoke a task from within another task.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@task</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">schedule_task</span><span class="p">():</span>
+    <span class="n">add</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When doing so, make sure to call synchronous tasks from within other synchronous tasks, and asynchronous tasks from within asynchronous tasks:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@atask</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_schedule_task</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">async_add</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If necessary, you can use <code class="docutils literal notranslate"><span class="pre">sync_to_async</span></code> or <code class="docutils literal notranslate"><span class="pre">async_to_sync</span></code> to bridge between sync and async contexts:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">asgiref.sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">async_to_sync</span>
+
+<span class="nd">@atask</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_schedule_task</span><span class="p">():</span>
+    <span class="n">async_to_sync</span><span class="p">(</span><span class="n">async_add</span><span class="o">.</span><span class="n">schedule</span><span class="p">)(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="task-entity-structure">

@@ -109,6 +109,20 @@ This will retry the task up to 20 times, waiting 100 seconds between each attemp
 
 ---
 
+## Task with Time
+
+You can schedule a task to run at a specific datetime using `eta` parameter in `schedule` method. 
+
+**Example:**
+
+```python
+add.schedule(1, 3, eta=datetime(2025, 3, 30, 18, 30))
+```
+
+This will attempt to run the task on March 30, 2025 at 18:30 UTC. However, be aware of the [task consumption order](https://lukas346.github.io/django_firefly_tasks/commands.html#consume-tasks), as it may affect the exact execution time.
+
+---
+
 ## Running a Task Inside Another Task
 You can invoke a task from within another task.
 

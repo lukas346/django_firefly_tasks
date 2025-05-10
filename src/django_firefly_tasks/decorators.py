@@ -1,7 +1,7 @@
 import functools
 
 from ._private.consts import DEFAULT_QUEUE, MAX_RETRIES, RETRY_DELAY
-from ._private.utils import get_func_path, is_async, serialize_object
+from ._private.utils import get_eta, get_func_path, is_async, serialize_object
 from .exceptions import AsyncFuncNotSupportedException, SyncFuncNotSupportedException
 from .models import Status, TaskModel
 
@@ -20,12 +20,15 @@ def task(queue: str = DEFAULT_QUEUE, max_retries: int = MAX_RETRIES, retry_delay
             if is_async(func):
                 raise AsyncFuncNotSupportedException
 
+            eta = get_eta(kwargs)
+
             func_name = get_func_path(func)
             serialized_params = serialize_object({"args": args, "kwargs": kwargs})
 
             return TaskModel.objects.create(
                 func_name=func_name,
                 raw_params=serialized_params,
+                not_before=eta,
                 queue=queue,
                 status=Status.CREATED,
                 retry_delay=retry_delay,
@@ -57,12 +60,15 @@ def atask(queue: str = DEFAULT_QUEUE, max_retries: int = MAX_RETRIES, retry_dela
             if not is_async(func):
                 raise SyncFuncNotSupportedException
 
+            eta = get_eta(kwargs)
+
             func_name = get_func_path(func)
             serialized_params = serialize_object({"args": args, "kwargs": kwargs})
 
             return await TaskModel.objects.acreate(
                 func_name=func_name,
                 raw_params=serialized_params,
+                not_before=eta,
                 queue=queue,
                 status=Status.CREATED,
                 retry_delay=retry_delay,

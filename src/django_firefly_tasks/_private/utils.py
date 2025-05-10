@@ -3,6 +3,7 @@ import base64
 import inspect
 import logging
 import pickle
+from datetime import datetime
 
 from django.conf import settings
 from django.db.models import Case, IntegerField, Value, When
@@ -70,3 +71,12 @@ def get_latest_task(queue: str):
         .order_by("not_before_null", "not_before", "pk")
         .first()
     )
+
+
+def get_eta(kwargs: dict) -> datetime | None:
+    eta = kwargs.pop("eta", None)
+
+    if eta and not isinstance(eta, datetime):
+        raise TypeError("'eta' have should be datetime")
+
+    return eta

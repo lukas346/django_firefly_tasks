@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from asgiref.sync import sync_to_async
@@ -57,6 +58,52 @@ class TasksTest(TestCase):
         self.assertEqual(task.max_retries, settings.MAX_RETRIES)
 
         self.assertEqual(task.returned, 4)
+
+    def test_task_simple_eta_passed(self):
+        eta = datetime(2025, 3, 30, 18, 30)
+        task = add.schedule(1, 3, eta=eta)
+
+        self.assertEqual(task.func_name, "tests.tasks.add")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        with patch("django_firefly_tasks.models.timezone.now", return_value=eta + timedelta(hours=3)):
+            with transaction.atomic():
+                task_processor(task)
+
+        task = TaskModel.objects.get(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.add")
+        self.assertEqual(task.status, Status.COMPLETED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        self.assertEqual(task.returned, 4)
+
+    def test_task_simple_eta_not_yet(self):
+        eta = datetime(2025, 3, 30, 18, 30)
+        task = add.schedule(1, 3, eta=eta)
+
+        self.assertEqual(task.func_name, "tests.tasks.add")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        with patch("django_firefly_tasks.models.timezone.now", return_value=eta - timedelta(hours=3)):
+            with transaction.atomic():
+                task_processor(task)
+
+        task = TaskModel.objects.get(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.add")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
 
     def test_task_sync_not_supported(self):
         with self.assertRaises(AsyncFuncNotSupportedException):
@@ -234,6 +281,50 @@ class AsyncTasksTest(TestCase):
         self.assertEqual(task.max_retries, settings.MAX_RETRIES)
 
         self.assertEqual(task.returned, 4)
+
+    async def test_task_simple_eta_passed(self):
+        eta = datetime(2025, 3, 30, 18, 30)
+        task = await async_add.schedule(1, 3, eta=eta)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_add")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        with patch("django_firefly_tasks.models.timezone.now", return_value=eta + timedelta(hours=3)):
+            await sync_to_async(process)(task)
+
+        task = await TaskModel.objects.aget(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_add")
+        self.assertEqual(task.status, Status.COMPLETED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        self.assertEqual(task.returned, 4)
+
+    async def test_task_simple_eta_not_yet(self):
+        eta = datetime(2025, 3, 30, 18, 30)
+        task = await async_add.schedule(1, 3, eta=eta)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_add")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
+
+        with patch("django_firefly_tasks.models.timezone.now", return_value=eta - timedelta(hours=3)):
+            await sync_to_async(process)(task)
+
+        task = await TaskModel.objects.aget(pk=task.pk)
+
+        self.assertEqual(task.func_name, "tests.tasks.async_add")
+        self.assertEqual(task.status, Status.CREATED)
+        self.assertEqual(task.retry_attempts, 0)
+        self.assertEqual(task.retry_delay, settings.RETRY_DELAY)
+        self.assertEqual(task.max_retries, settings.MAX_RETRIES)
 
     async def test_task_async_not_supported(self):
         with self.assertRaises(SyncFuncNotSupportedException):

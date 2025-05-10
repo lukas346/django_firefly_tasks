@@ -6,7 +6,7 @@ Custom django commands provided by the Django Firefly Tasks.
 
 Consumes scheduled tasks. Default queue is called "default". **Consumer doesn't have auto-reload, so when tasks changed it requires manual restart.** 
 
-Consuming order: `created, not retried`, `closest retries`, `the most distant in time retries`
+Consuming order: `created, not retried`, `closest retries`, `eta`, `the most distant in time retries`
 
 ```bash
 python manage.py consume_tasks [--queue QUEUE]

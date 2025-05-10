@@ -142,7 +142,10 @@ When task metadata is created, it stores the function's location in dot notation
 
 The best solution for now is to manually update the `TaskModel.func_name` field in the database to reflect the new function path - for example, change it from `app.views.foo` to `app.tasks.foo`.
 ### Can I specify the date and time of task execution?
-This feature is coming soon.
+Yes, please use `eta` parameter in `schedule` method.
+```python
+add.schedule(1, 3, eta=datetime(2025, 3, 30, 18, 30))
+```
 
 ## Support
 

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 from asgiref.sync import sync_to_async
 from django.conf import settings
@@ -60,7 +61,7 @@ class TasksTest(TestCase):
         self.assertEqual(task.returned, 4)
 
     def test_task_simple_eta_passed(self):
-        eta = datetime(2025, 3, 30, 18, 30)
+        eta = datetime(2025, 3, 30, 18, 30, tzinfo=ZoneInfo("UTC"))
         task = add.schedule(1, 3, eta=eta)
 
         self.assertEqual(task.func_name, "tests.tasks.add")
@@ -84,7 +85,7 @@ class TasksTest(TestCase):
         self.assertEqual(task.returned, 4)
 
     def test_task_simple_eta_not_yet(self):
-        eta = datetime(2025, 3, 30, 18, 30)
+        eta = datetime(2025, 3, 30, 18, 30, tzinfo=ZoneInfo("UTC"))
         task = add.schedule(1, 3, eta=eta)
 
         self.assertEqual(task.func_name, "tests.tasks.add")
@@ -283,7 +284,7 @@ class AsyncTasksTest(TestCase):
         self.assertEqual(task.returned, 4)
 
     async def test_task_simple_eta_passed(self):
-        eta = datetime(2025, 3, 30, 18, 30)
+        eta = datetime(2025, 3, 30, 18, 30, tzinfo=ZoneInfo("UTC"))
         task = await async_add.schedule(1, 3, eta=eta)
 
         self.assertEqual(task.func_name, "tests.tasks.async_add")
@@ -306,7 +307,7 @@ class AsyncTasksTest(TestCase):
         self.assertEqual(task.returned, 4)
 
     async def test_task_simple_eta_not_yet(self):
-        eta = datetime(2025, 3, 30, 18, 30)
+        eta = datetime(2025, 3, 30, 18, 30, tzinfo=ZoneInfo("UTC"))
         task = await async_add.schedule(1, 3, eta=eta)
 
         self.assertEqual(task.func_name, "tests.tasks.async_add")

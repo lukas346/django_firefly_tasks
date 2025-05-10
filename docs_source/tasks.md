@@ -116,7 +116,7 @@ You can schedule a task to run at a specific datetime using `eta` parameter in `
 **Example:**
 
 ```python
-add.schedule(1, 3, eta=datetime(2025, 3, 30, 18, 30))
+add.schedule(1, 3, eta=datetime(2025, 3, 30, 18, 30, tzinfo=ZoneInfo("UTC")))
 ```
 
 This will attempt to run the task on March 30, 2025 at 18:30 UTC. However, be aware of the [task consumption order](https://lukas346.github.io/django_firefly_tasks/commands.html#consume-tasks), as it may affect the exact execution time.

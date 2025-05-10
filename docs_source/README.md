@@ -144,7 +144,7 @@ The best solution for now is to manually update the `TaskModel.func_name` field 
 ### Can I specify the date and time of task execution?
 Yes, please use `eta` parameter in `schedule` method.
 ```python
-add.schedule(1, 3, eta=datetime(2025, 3, 30, 18, 30))
+add.schedule(1, 3, eta=datetime(2025, 3, 30, 18, 30, tzinfo=ZoneInfo("UTC")))
 ```
 
 ## Support
